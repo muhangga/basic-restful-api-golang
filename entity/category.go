@@ -1,4 +1,4 @@
-package domain
+package entity
 
 type Category struct {
 	Id   int64  `json:"id"`

@@ -6,12 +6,12 @@ import (
 	"errors"
 
 	"github.com/muhangga/helper"
-	"github.com/muhangga/model/domain"
+	"github.com/muhangga/entity"
 )
 
 type CategoryRepositoryImpl struct {}
 
-func (r *CategoryRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, category domain.Category) domain.Category {
+func (r *CategoryRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, category entity.Category) entity.Category {
 	sql := "insert into category (name) values (?)"
 	result, err := tx.ExecContext(ctx, sql, category.Name)
 	helper.PanicIfError(err)
@@ -23,7 +23,7 @@ func (r *CategoryRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, category 
 	return category
 }
 
-func (r *CategoryRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, category domain.Category) domain.Category {
+func (r *CategoryRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, category entity.Category) entity.Category {
 	sql := "update category set name = ? where id = ?"
 	_, err := tx.ExecContext(ctx, sql, category.Name, category.Id)
 	helper.PanicIfError(err)
@@ -31,18 +31,18 @@ func (r *CategoryRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, categor
 	return category
 }
 
-func (r *CategoryRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, category domain.Category) {
+func (r *CategoryRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, category entity.Category) {
 	sql := "delete from category where id = ?"
 	_, err := tx.ExecContext(ctx, sql, category.Name, category.Id)
 	helper.PanicIfError(err)
 }
 
-func (r *CategoryRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, categoryId int) (domain.Category, error) {
+func (r *CategoryRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, categoryId int) (entity.Category, error) {
 	sql := "select id, name from category where id = ?"
 	rows, err := tx.QueryContext(ctx, sql, categoryId)
 	helper.PanicIfError(err)
 
-	category := domain.Category{}
+	category := entity.Category{}
 
 	if rows.Next() {
 		err := rows.Scan(&category.Id, &category.Name) 
@@ -54,14 +54,14 @@ func (r *CategoryRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, categ
 	}
 }
 
-func (r *CategoryRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []domain.Category {
+func (r *CategoryRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity.Category {
 	sql := "select id, name from category"
 	rows, err := tx.QueryContext(ctx, sql)
 	helper.PanicIfError(err)
 
-	var categories []domain.Category
+	var categories []entity.Category
 	for rows.Next() {
-		var category domain.Category
+		var category entity.Category
 
 		err := rows.Scan(&category.Id, &category.Name)
 		helper.PanicIfError(err)
